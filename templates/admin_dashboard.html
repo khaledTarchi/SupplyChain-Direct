@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard – SupplyChain-Direct</title>
+    <meta name="description"
+        content="Wholesaler control panel with live shortage map, driver assignment, and analytics." />
+    <link rel="manifest" href="/static/manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" href="/static/images/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/css/variables.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
+</head>
+
+<body class="dashboard-page">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <rect width="40" height="40" rx="12" fill="url(#sg2)" />
+                    <path d="M10 28L20 12L30 28H10Z" fill="white" opacity=".9" />
+                    <circle cx="20" cy="20" r="4" fill="white" />
+                    <defs>
+                        <linearGradient id="sg2" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#6366f1" />
+                            <stop offset="1" stop-color="#8b5cf6" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-name-sm">SCD</span>
+            <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close menu">✕</button>
+        </div>
+
+        <div class="user-block">
+            <div class="user-avatar">👑</div>
+            <div>
+                <p class="user-name" id="sidebarUserName">Loading…</p>
+                <span class="user-badge admin">Admin</span>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')">📊 Dashboard</a></li>
+            <li><a href="#map" class="nav-link" onclick="showSection('map')">🗺️ Shortage Map</a></li>
+            <li><a href="#reports" class="nav-link" onclick="showSection('reports')">📋 Reports</a></li>
+            <li><a href="#deliveries" class="nav-link" onclick="showSection('deliveries')">🚛 Deliveries</a></li>
+            <li><a href="#products" class="nav-link" onclick="showSection('products')">📦 Products</a></li>
+            <li><a href="#ratings" class="nav-link" onclick="showSection('ratings')">⭐ Ratings</a></li>
+        </ul>
+
+        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <header class="topbar">
+            <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+            <h2 class="topbar-title" id="pageTitle">Dashboard</h2>
+            <div class="topbar-actions">
+                <span class="live-dot"></span>
+                <span>Live</span>
+            </div>
+        </header>
+
+        <!-- ============ OVERVIEW ============ -->
+        <section class="content-section active" id="section-overview">
+            <h1 class="section-heading">📊 Overview</h1>
+
+            <div class="stats-grid stats-grid-6">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-total">—</p>
+                        <p class="stat-label">Total Reports</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-amber">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-pending">—</p>
+                        <p class="stat-label">Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">🚛</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-transit">—</p>
+                        <p class="stat-label">In Transit</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-delivered">—</p>
+                        <p class="stat-label">Delivered</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-cyan">
+                    <div class="stat-icon">🚛</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-drivers">—</p>
+                        <p class="stat-label">Active Drivers</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-rose">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="s-rating">—</p>
+                        <p class="stat-label">Avg Rating</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini map preview -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>🗺️ Shortage Heatmap Preview</h3>
+                    <button class="btn-link" onclick="showSection('map')">Fullscreen →</button>
+                </div>
+                <div id="miniMap" class="mini-map"></div>
+            </div>
+
+            <!-- Pending reports quick list -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>⏳ Pending Reports</h3>
+                    <button class="btn-link" onclick="showSection('reports')">View all →</button>
+                </div>
+                <div id="pendingQuickList" class="order-list">
+                    <div class="empty-state">Loading…</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ MAP ============ -->
+        <section class="content-section" id="section-map">
+            <h1 class="section-heading">🗺️ Critical Shortage Map</h1>
+            <p class="section-sub">Red markers show pending shortages; orange shows assigned. Click a marker for
+                details.</p>
+            <div id="fullMap" class="full-map"></div>
+        </section>
+
+        <!-- ============ REPORTS ============ -->
+        <section class="content-section" id="section-reports">
+            <h1 class="section-heading">📋 All Shortage Reports</h1>
+            <div class="filter-bar">
+                <select id="adminReportFilter" onchange="filterAdminReports(this.value)">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="assigned">🎯 Assigned</option>
+                    <option value="in_transit">🚛 In Transit</option>
+                    <option value="delivered">✅ Delivered</option>
+                </select>
+            </div>
+            <div id="adminReportsList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ DELIVERIES ============ -->
+        <section class="content-section" id="section-deliveries">
+            <h1 class="section-heading">🚛 Deliveries</h1>
+            <div id="adminDeliveriesList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ PRODUCTS ============ -->
+        <section class="content-section" id="section-products">
+            <h1 class="section-heading">📦 Product Catalogue</h1>
+            <button class="btn-primary" onclick="openProductModal()">＋ Add Product</button>
+            <div id="productsList" class="product-grid" style="margin-top:1rem;">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ RATINGS ============ -->
+        <section class="content-section" id="section-ratings">
+            <h1 class="section-heading">⭐ Driver Ratings</h1>
+            <div id="ratingsList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Assign Driver Modal -->
+    <div class="modal-overlay hidden" id="assignModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeAssignModal()">✕</button>
+            <h3>🎯 Assign Driver</h3>
+            <p id="assignReportInfo"></p>
+            <div class="form-group">
+                <label for="driverSelect">Select Driver</label>
+                <select id="driverSelect"></select>
+            </div>
+            <button class="btn-primary btn-full" onclick="confirmAssign()">Assign Now</button>
+            <div id="assignError" class="form-error hidden"></div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-overlay hidden" id="productModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeProductModal()">✕</button>
+            <h3>📦 Add New Product</h3>
+            <form id="productForm" novalidate>
+                <div class="form-group">
+                    <label for="prod-name">Product Name</label>
+                    <input type="text" id="prod-name" required placeholder="e.g. Huile de table 5L" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prod-price">Price / Unit</label>
+                        <input type="number" id="prod-price" min="0" step="0.01" required placeholder="850" />
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-stock">Stock Qty</label>
+                        <input type="number" id="prod-stock" min="0" value="0" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prod-unit">Unit</label>
+                        <input type="text" id="prod-unit" placeholder="kg, box, crate" value="unit" />
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-cat">Category</label>
+                        <input type="text" id="prod-cat" placeholder="Épicerie" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prod-desc">Description</label>
+                    <textarea id="prod-desc" rows="2" placeholder="Optional…"></textarea>
+                </div>
+                <div id="productError" class="form-error hidden"></div>
+                <button type="submit" class="btn-primary btn-full">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/static/js/admin.js"></script>
+</body>
+
+</html>

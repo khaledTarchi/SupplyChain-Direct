@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Panel – SupplyChain-Direct</title>
+    <meta name="description" content="Driver delivery dashboard for managing assigned orders." />
+    <link rel="manifest" href="/static/manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" href="/static/images/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/variables.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
+</head>
+
+<body class="dashboard-page">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <rect width="40" height="40" rx="12" fill="url(#sg3)" />
+                    <path d="M10 28L20 12L30 28H10Z" fill="white" opacity=".9" />
+                    <circle cx="20" cy="20" r="4" fill="white" />
+                    <defs>
+                        <linearGradient id="sg3" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#6366f1" />
+                            <stop offset="1" stop-color="#8b5cf6" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-name-sm">SCD</span>
+            <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close menu">✕</button>
+        </div>
+
+        <div class="user-block">
+            <div class="user-avatar">🚛</div>
+            <div>
+                <p class="user-name" id="sidebarUserName">Loading…</p>
+                <span class="user-badge driver">Driver</span>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#active" class="nav-link active" onclick="showSection('active')">📋 Active Jobs</a></li>
+            <li><a href="#completed" class="nav-link" onclick="showSection('completed')">✅ Completed</a></li>
+        </ul>
+
+        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <header class="topbar">
+            <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+            <h2 class="topbar-title" id="pageTitle">Active Jobs</h2>
+            <div class="topbar-actions"></div>
+        </header>
+
+        <!-- ============ ACTIVE JOBS ============ -->
+        <section class="content-section active" id="section-active">
+            <h1 class="section-heading">📋 Active Deliveries</h1>
+            <p class="section-sub">Update each delivery status as you progress.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-amber">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="d-assigned">—</p>
+                        <p class="stat-label">Assigned</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">🚛</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="d-transit">—</p>
+                        <p class="stat-label">In Transit</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="d-done">—</p>
+                        <p class="stat-label">Completed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="activeJobsList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ COMPLETED ============ -->
+        <section class="content-section" id="section-completed">
+            <h1 class="section-heading">✅ Completed Deliveries</h1>
+            <div id="completedJobsList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="/static/js/driver.js"></script>
+</body>
+
+</html>

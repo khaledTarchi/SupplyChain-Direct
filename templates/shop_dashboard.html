@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Shop – SupplyChain-Direct</title>
+    <meta name="description" content="Shop owner dashboard to report shortages and track deliveries." />
+    <link rel="manifest" href="/static/manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" href="/static/images/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/variables.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
+</head>
+
+<body class="dashboard-page">
+
+    <!-- PWA offline banner -->
+    <div class="offline-banner" id="offlineBanner">
+        📡 You are offline – Reports will sync automatically when reconnected
+    </div>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <rect width="40" height="40" rx="12" fill="url(#sg)" />
+                    <path d="M10 28L20 12L30 28H10Z" fill="white" opacity=".9" />
+                    <circle cx="20" cy="20" r="4" fill="white" />
+                    <defs>
+                        <linearGradient id="sg" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#6366f1" />
+                            <stop offset="1" stop-color="#8b5cf6" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-name-sm">SCD</span>
+            <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close menu">✕</button>
+        </div>
+
+        <div class="user-block">
+            <div class="user-avatar">🏪</div>
+            <div>
+                <p class="user-name" id="sidebarUserName">Loading…</p>
+                <span class="user-badge shop">Shop Owner</span>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')">📊 Overview</a></li>
+            <li><a href="#report" class="nav-link" onclick="showSection('report')">🚨 Report Shortage</a></li>
+            <li><a href="#orders" class="nav-link" onclick="showSection('orders')">📦 My Orders</a></li>
+            <li><a href="#deliveries" class="nav-link" onclick="showSection('deliveries')">🚛 Deliveries</a></li>
+        </ul>
+
+        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+    </nav>
+
+    <!-- OVERLAY for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- Top bar -->
+        <header class="topbar">
+            <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+            <h2 class="topbar-title" id="pageTitle">Overview</h2>
+            <div class="topbar-actions">
+                <div class="signal-indicator" id="signalBadge" title="Network status">
+                    <span class="signal-dot online"></span>
+                    <span class="signal-label">Online</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============ SECTION: OVERVIEW ============ -->
+        <section class="content-section active" id="section-overview">
+            <div class="page-greeting">
+                <h1>Welcome back, <span id="greetName">Shop Owner</span> 👋</h1>
+                <p>Here is your supply chain activity at a glance.</p>
+            </div>
+
+            <!-- Stats cards -->
+            <div class="stats-grid">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="stat-total">—</p>
+                        <p class="stat-label">Total Reports</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-amber">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="stat-pending">—</p>
+                        <p class="stat-label">Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">🚛</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="stat-transit">—</p>
+                        <p class="stat-label">In Transit</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <p class="stat-value" id="stat-delivered">—</p>
+                        <p class="stat-label">Delivered</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent orders mini-list -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Orders</h3>
+                    <button class="btn-link" onclick="showSection('orders')">View all →</button>
+                </div>
+                <div id="recentOrdersList" class="order-list">
+                    <div class="empty-state">Loading your orders…</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: REPORT SHORTAGE ============ -->
+        <section class="content-section" id="section-report">
+            <h1 class="section-heading">🚨 Report a Product Shortage</h1>
+            <p class="section-sub">Your GPS location will be attached automatically to help the wholesaler locate your
+                shop.</p>
+
+            <div class="card report-card">
+                <form id="shortageForm" novalidate>
+
+                    <!-- Product selector -->
+                    <div class="form-group">
+                        <label for="product-select">Select Product</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📦</span>
+                            <select id="product-select" required>
+                                <option value="">— Choose a product —</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quantity + Shop name in a row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="qty-input">Quantity Needed</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔢</span>
+                                <input type="number" id="qty-input" min="1" max="9999" value="1" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shop-name-input">Shop Name</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🏪</span>
+                                <input type="text" id="shop-name-input" placeholder="e.g. Épicerie Centrale" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="notes-input">Additional Notes</label>
+                        <textarea id="notes-input" rows="3"
+                            placeholder="Describe urgency or any special instructions…"></textarea>
+                    </div>
+
+                    <!-- GPS widget -->
+                    <div class="gps-widget" id="gpsWidget">
+                        <div class="gps-status" id="gpsStatus">
+                            <span class="gps-icon">📍</span>
+                            <span id="gpsText">Tap to fetch your GPS location</span>
+                        </div>
+                        <button type="button" class="btn-gps" id="gpsBtn" onclick="getGPS()">
+                            Get My Location
+                        </button>
+                        <div class="gps-coords hidden" id="gpsCoords">
+                            <code id="gpsLat">—</code> / <code id="gpsLng">—</code>
+                        </div>
+                    </div>
+
+                    <div id="reportError" class="form-error   hidden"></div>
+                    <div id="reportSuccess" class="form-success hidden"></div>
+
+                    <button type="submit" class="btn-primary btn-full" id="reportBtn" disabled>
+                        <span class="btn-text">📤 Submit Report</span>
+                        <span class="btn-loader hidden"></span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: MY ORDERS ============ -->
+        <section class="content-section" id="section-orders">
+            <h1 class="section-heading">📦 My Orders &amp; Reports</h1>
+            <div class="filter-bar">
+                <select id="orderFilter" onchange="filterOrders(this.value)">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="assigned">🎯 Assigned</option>
+                    <option value="in_transit">🚛 In Transit</option>
+                    <option value="delivered">✅ Delivered</option>
+                </select>
+            </div>
+            <div id="ordersList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: DELIVERIES / FEEDBACK ============ -->
+        <section class="content-section" id="section-deliveries">
+            <h1 class="section-heading">🚛 Deliveries &amp; Feedback</h1>
+            <div id="deliveriesList" class="deliveries-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+    </div><!-- /main-content -->
+
+    <!-- Rating Modal -->
+    <div class="modal-overlay hidden" id="ratingModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeRatingModal()">✕</button>
+            <h3>Rate Your Delivery ⭐</h3>
+            <p id="ratingDeliveryInfo"></p>
+            <div class="star-row" id="starRow">
+                <span class="star" data-v="1" onclick="selectStar(1)">★</span>
+                <span class="star" data-v="2" onclick="selectStar(2)">★</span>
+                <span class="star" data-v="3" onclick="selectStar(3)">★</span>
+                <span class="star" data-v="4" onclick="selectStar(4)">★</span>
+                <span class="star" data-v="5" onclick="selectStar(5)">★</span>
+            </div>
+            <textarea id="ratingComment" rows="3" placeholder="Optional comment…"></textarea>
+            <button class="btn-primary btn-full" onclick="submitRating()">Submit Feedback</button>
+            <div id="ratingError" class="form-error hidden"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/shop.js"></script>
+</body>
+
+</html>

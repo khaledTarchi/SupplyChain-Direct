@@ -1,0 +1,93 @@
+/* ============================================================
+   variables.css – SupplyChain-Direct Design Tokens
+   ============================================================ */
+:root {
+  /* — Brand palette — */
+  --brand-50:  #eef2ff;
+  --brand-100: #e0e7ff;
+  --brand-200: #c7d2fe;
+  --brand-300: #a5b4fc;
+  --brand-400: #818cf8;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-700: #4338ca;
+  --brand-800: #3730a3;
+  --brand-900: #312e81;
+
+  /* — Neutral — */
+  --slate-50:  #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+
+  /* — Accent colours — */
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --red-500:   #ef4444;
+  --red-600:   #dc2626;
+  --cyan-400:  #22d3ee;
+  --cyan-500:  #06b6d4;
+  --rose-400:  #fb7185;
+  --rose-500:  #f43f5e;
+  --purple-400:#a78bfa;
+  --purple-500:#8b5cf6;
+
+  /* — Surfaces — */
+  --bg-body:    var(--slate-950);
+  --bg-surface: var(--slate-900);
+  --bg-card:    rgba(30, 41, 59, .65);
+  --bg-elevated:rgba(51, 65, 85, .5);
+  --border-default: rgba(148, 163, 184, .12);
+  --border-focus:   var(--brand-400);
+
+  /* — Text — */
+  --text-primary:   var(--slate-50);
+  --text-secondary: var(--slate-400);
+  --text-muted:     var(--slate-500);
+
+  /* — Font — */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* — Spacing — */
+  --space-xs: .25rem;
+  --space-sm: .5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl:3rem;
+
+  /* — Radii — */
+  --radius-sm: .5rem;
+  --radius-md: .75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+
+  /* — Shadows — */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,.25);
+  --shadow-md:  0 4px 12px rgba(0,0,0,.3);
+  --shadow-lg:  0 8px 30px rgba(0,0,0,.35);
+  --shadow-glow:0 0 20px rgba(99,102,241,.25);
+
+  /* — Transitions — */
+  --ease-out: cubic-bezier(.22,1,.36,1);
+  --trans-fast:  150ms var(--ease-out);
+  --trans-normal:250ms var(--ease-out);
+  --trans-slow:  400ms var(--ease-out);
+
+  /* — Sidebar — */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 0px;
+
+  /* — Topbar — */
+  --topbar-height: 60px;
+}
