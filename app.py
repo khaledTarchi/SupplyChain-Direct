@@ -19,7 +19,7 @@ from flask import (
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_cors import CORS
 
-from models import db, bcrypt, User, Product, ShortageReport, Delivery, Rating
+from models import db, bcrypt, User, Product, ShortageReport, Delivery, Rating, Complaint
 
 # ---------------------------------------------------------------------------
 # Application Factory

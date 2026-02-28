@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadCurrentUser();
     await loadProducts();
     await loadMyReports();
+    await loadComplaints();
     setupOfflineDetection();
     registerServiceWorker();
 });
@@ -389,8 +390,23 @@ function showSection(name) {
         document.querySelector(`.nav-link[onclick*="${name}"]`);
     if (link) link.classList.add("active");
     // Update topbar title
-    const titles = { overview: "Overview", report: "Report Shortage", orders: "My Orders", deliveries: "Deliveries" };
-    document.getElementById("pageTitle").textContent = titles[name] || name;
+    const titles = {
+        overview: "nav_overview",
+        report: "nav_report",
+        orders: "nav_orders",
+        deliveries: "nav_deliveries",
+        complaints: "nav_complaints"
+    };
+
+    const pageTitle = document.getElementById("pageTitle");
+    const key = titles[name] || name;
+    pageTitle.setAttribute("data-i18n", key);
+    const lang = localStorage.getItem("preferred_language") || "en";
+    if (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) {
+        pageTitle.textContent = translations[lang][key];
+    } else {
+        pageTitle.textContent = name; // Fallback
+    }
     // Close mobile sidebar
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("sidebarOverlay").classList.remove("show");
@@ -441,20 +457,115 @@ function registerServiceWorker() {
 }
 
 // ============================================================
+// COMPLAINTS
+// ============================================================
+async function loadComplaints() {
+    try {
+        const res = await fetch("/api/complaints");
+        if (!res.ok) return;
+        const complaints = await res.json();
+
+        const el = document.getElementById("complaintsList");
+        if (!complaints.length) {
+            el.innerHTML = '<div class="empty-state">No complaints found.</div>';
+            return;
+        }
+
+        el.innerHTML = complaints.map(c => `
+            <div class="order-card">
+              <div class="order-main">
+                <h4>${c.subject}</h4>
+                <span class="status-badge status-${c.status === 'closed' ? 'delivered' : 'pending'}">${c.status === 'closed' ? t('complaint_closed') : t('complaint_open')}</span>
+                <div class="order-meta">
+                  <span>🕐 ${timeAgo(c.created_at)}</span>
+                </div>
+                <p style="font-size:.82rem;color:var(--text-secondary);margin-top:.5rem">"${c.message}"</p>
+              </div>
+            </div>
+        `).join("");
+    } catch {
+        /* offline */
+    }
+}
+
+function openComplaintModal() {
+    document.getElementById("complaintSubject").value = "";
+    document.getElementById("complaintMessage").value = "";
+    document.getElementById("complaintError").classList.add("hidden");
+    document.getElementById("complaintSuccess").classList.add("hidden");
+    document.getElementById("complaintModal").classList.remove("hidden");
+}
+
+function closeComplaintModal() {
+    document.getElementById("complaintModal").classList.add("hidden");
+}
+
+async function submitComplaint() {
+    const errEl = document.getElementById("complaintError");
+    const successEl = document.getElementById("complaintSuccess");
+    errEl.classList.add("hidden");
+    successEl.classList.add("hidden");
+
+    const subject = document.getElementById("complaintSubject").value.trim();
+    const message = document.getElementById("complaintMessage").value.trim();
+
+    if (!subject || !message) {
+        showFormMsg(errEl, "Both subject and message are required.");
+        return;
+    }
+
+    try {
+        const res = await fetch("/api/complaints", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ subject, message })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            showFormMsg(errEl, data.error || "Failed to submit complaint.");
+            return;
+        }
+
+        showFormMsg(successEl, "✅ Complaint submitted successfully.");
+
+        setTimeout(() => {
+            closeComplaintModal();
+            loadComplaints();
+        }, 1500);
+
+    } catch {
+        showFormMsg(errEl, "Network error. Try again.");
+    }
+}
+
+// ============================================================
 // HELPERS
 // ============================================================
+function t(key) {
+    const lang = localStorage.getItem("preferred_language") || "en";
+    return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key])
+        ? translations[lang][key]
+        : key;
+}
+
 function formatStatus(s) {
-    const map = { pending: "⏳ Pending", assigned: "🎯 Assigned", in_transit: "🚛 In Transit", delivered: "✅ Delivered" };
-    return map[s] || s;
+    const map = {
+        pending: () => `⏳ ${t("pending")}`,
+        assigned: () => `🎯 ${t("assigned")}`,
+        in_transit: () => `🚛 ${t("in_transit")}`,
+        delivered: () => `✅ ${t("delivered")}`
+    };
+    return (map[s] ? map[s]() : s);
 }
 function timeAgo(iso) {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1) return t("just_now");
+    if (mins < 60) return `${mins}${t("min_ago")}`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
+    if (hrs < 24) return `${hrs}${t("hr_ago")}`;
+    return `${Math.floor(hrs / 24)}${t("day_ago")}`;
 }
 function showFormMsg(el, msg) {
     el.textContent = msg;

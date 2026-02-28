@@ -45,6 +45,9 @@ class User(UserMixin, db.Model):
     ratings_given = db.relationship(
         "Rating", back_populates="shop_owner", foreign_keys="Rating.shop_owner_id"
     )
+    complaints = db.relationship(
+        "Complaint", back_populates="user", foreign_keys="Complaint.user_id"
+    )
 
     def set_password(self, password: str) -> None:
         self.password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
@@ -213,5 +216,36 @@ class Rating(db.Model):
             "report_id": self.report_id,
             "score": self.score,
             "comment": self.comment,
+            "created_at": self.created_at.isoformat(),
+        }
+
+
+# ---------------------------------------------------------------------------
+# Complaint
+# ---------------------------------------------------------------------------
+class Complaint(db.Model):
+    __tablename__ = "complaints"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    
+    subject = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    
+    # Status: 'open' -> 'closed'
+    status = db.Column(db.String(20), nullable=False, default="open")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = db.relationship("User", back_populates="complaints", foreign_keys=[user_id])
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "user_name": self.user.name if self.user else None,
+            "subject": self.subject,
+            "message": self.message,
+            "status": self.status,
             "created_at": self.created_at.isoformat(),
         }

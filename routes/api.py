@@ -14,7 +14,7 @@ from datetime import datetime
 from functools import wraps
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from models import db, User, Product, ShortageReport, Delivery, Rating
+from models import db, User, Product, ShortageReport, Delivery, Rating, Complaint
 
 api_bp = Blueprint("api", __name__)
 
@@ -358,3 +358,40 @@ def heatmap_data():
         for r in reports
     ]
     return jsonify(points), 200
+
+
+# ---------------------------------------------------------------------------
+# Complaints
+# ---------------------------------------------------------------------------
+@api_bp.route("/complaints", methods=["POST"])
+@login_required
+def create_complaint():
+    data = request.get_json(silent=True) or {}
+    subject = data.get("subject", "").strip()
+    message = data.get("message", "").strip()
+
+    if not subject or not message:
+        return jsonify({"error": "Subject and message are required."}), 400
+
+    complaint = Complaint(
+        user_id=current_user.id,
+        subject=subject,
+        message=message
+    )
+    
+    db.session.add(complaint)
+    db.session.commit()
+    
+    return jsonify(complaint.to_dict()), 201
+
+
+@api_bp.route("/complaints", methods=["GET"])
+@login_required
+def get_complaints():
+    if current_user.role == "admin":
+        complaints = Complaint.query.order_by(Complaint.created_at.desc()).all()
+    else:
+        complaints = Complaint.query.filter_by(user_id=current_user.id).order_by(Complaint.created_at.desc()).all()
+        
+    return jsonify([c.to_dict() for c in complaints]), 200
+

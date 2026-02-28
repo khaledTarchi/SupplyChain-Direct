@@ -21,7 +21,7 @@ let assignTargetReportId = null;
 // ============================================================
 document.addEventListener("DOMContentLoaded", async () => {
     await loadAdminUser();
-    await Promise.all([loadStats(), loadReports(), loadDrivers(), loadDeliveries(), loadProducts(), loadRatings()]);
+    await Promise.all([loadStats(), loadReports(), loadDrivers(), loadDeliveries(), loadProducts(), loadRatings(), loadComplaints()]);
     initMaps();
 });
 
@@ -111,10 +111,10 @@ async function loadHeatmapData() {
             const popup = `
         <div style="font-family:Inter,sans-serif;min-width:160px">
           <strong>${p.shop_name}</strong><br/>
-          <span style="color:#888">Product:</span> ${p.product}<br/>
-          <span style="color:#888">Qty:</span> ${p.quantity}<br/>
-          <span style="color:#888">Status:</span> ${p.status}<br/>
-          <span style="color:#888">Reported:</span> ${timeAgo(p.created_at)}
+          <span style="color:#888">${t('product_label')}:</span> ${p.product}<br/>
+          <span style="color:#888">${t('qty_label')}:</span> ${p.quantity}<br/>
+          <span style="color:#888">${t('status_label')}:</span> ${p.status}<br/>
+          <span style="color:#888">${t('reported_label')}:</span> ${timeAgo(p.created_at)}
         </div>`;
 
             const m1 = L.marker([p.lat, p.lng], { icon }).addTo(miniLeafletMap).bindPopup(popup);
@@ -147,7 +147,7 @@ function renderAdminReports(filter = "all") {
     const el = document.getElementById("adminReportsList");
     const list = filter === "all" ? allReports : allReports.filter((r) => r.status === filter);
     if (!list.length) {
-        el.innerHTML = '<div class="empty-state">No reports found.</div>';
+        el.innerHTML = `<div class="empty-state">${t('no_reports')}</div>`;
         return;
     }
     el.innerHTML = list
@@ -155,17 +155,17 @@ function renderAdminReports(filter = "all") {
             (r) => `
     <div class="order-card">
       <div class="order-main">
-        <h4>${r.product_name || "Product #" + r.product_id}</h4>
+        <h4>${r.product_name || t('product_label') + ' #' + r.product_id}</h4>
         <span class="status-badge status-${r.status}">${formatStatus(r.status)}</span>
         <div class="order-meta">
-          <span>Shop: ${r.shop_name || r.shop_owner_name || "—"}</span>
-          <span>Qty: ${r.quantity_requested}</span>
+          <span>${t('shop_label')}: ${r.shop_name || r.shop_owner_name || '—'}</span>
+          <span>${t('qty_label')}: ${r.quantity_requested}</span>
           <span>📍 ${r.latitude.toFixed(4)}, ${r.longitude.toFixed(4)}</span>
           <span>🕐 ${timeAgo(r.created_at)}</span>
         </div>
       </div>
       <div class="order-actions">
-        ${r.status === "pending" ? `<button class="btn-sm btn-assign" onclick="openAssignModal(${r.id})">🎯 Assign Driver</button>` : ""}
+        ${r.status === 'pending' ? `<button class="btn-sm btn-assign" onclick="openAssignModal(${r.id})">🎯 ${t('assign_driver_btn')}</button>` : ''}
       </div>
     </div>`
         )
@@ -180,7 +180,7 @@ function renderPendingQuick() {
     const el = document.getElementById("pendingQuickList");
     const pending = allReports.filter((r) => r.status === "pending").slice(0, 5);
     if (!pending.length) {
-        el.innerHTML = '<div class="empty-state">No pending reports 🎉</div>';
+        el.innerHTML = `<div class="empty-state">${t('no_pending_reports')}</div>`;
         return;
     }
     el.innerHTML = pending
@@ -188,7 +188,7 @@ function renderPendingQuick() {
             (r) => `
     <div class="order-item">
       <span><strong>${r.product_name}</strong> — ${r.shop_name || r.shop_owner_name}</span>
-      <button class="btn-sm btn-assign" onclick="openAssignModal(${r.id})">Assign</button>
+      <button class="btn-sm btn-assign" onclick="openAssignModal(${r.id})">${t('assign_btn')}</button>
     </div>`
         )
         .join("");
@@ -228,7 +228,7 @@ async function confirmAssign() {
     errEl.classList.add("hidden");
     const driverId = document.getElementById("driverSelect").value;
     if (!driverId) {
-        errEl.textContent = "Select a driver.";
+        errEl.textContent = t("select_driver_err");
         errEl.classList.remove("hidden");
         return;
     }
@@ -247,7 +247,7 @@ async function confirmAssign() {
         closeAssignModal();
         await Promise.all([loadReports(), loadDeliveries(), loadStats(), loadHeatmapData()]);
     } catch {
-        errEl.textContent = "Network error.";
+        errEl.textContent = t("network_error");
         errEl.classList.remove("hidden");
     }
 }
@@ -266,7 +266,7 @@ async function loadDeliveries() {
 function renderAdminDeliveries() {
     const el = document.getElementById("adminDeliveriesList");
     if (!allDeliveries.length) {
-        el.innerHTML = '<div class="empty-state">No deliveries yet.</div>';
+        el.innerHTML = `<div class="empty-state">${t('no_deliveries')}</div>`;
         return;
     }
     el.innerHTML = allDeliveries
@@ -274,13 +274,13 @@ function renderAdminDeliveries() {
             (d) => `
     <div class="order-card">
       <div class="order-main">
-        <h4>Delivery #${d.id}</h4>
+        <h4>${t('delivery_label')} #${d.id}</h4>
         <span class="status-badge status-${d.status}">${formatStatus(d.status)}</span>
         <div class="order-meta">
-          <span>Report #${d.report_id}</span>
-          <span>Driver: ${d.driver_name || "—"}</span>
-          <span>Assigned: ${timeAgo(d.assigned_at)}</span>
-          ${d.delivered_at ? `<span>Done: ${timeAgo(d.delivered_at)}</span>` : ""}
+          <span>${t('report_label')} #${d.report_id}</span>
+          <span>${t('driver_label')}: ${d.driver_name || '—'}</span>
+          <span>${t('assigned_label')}: ${timeAgo(d.assigned_at)}</span>
+          ${d.delivered_at ? `<span>${t('done_label')}: ${timeAgo(d.delivered_at)}</span>` : ''}
         </div>
       </div>
     </div>`
@@ -297,7 +297,7 @@ async function loadProducts() {
         const products = await res.json();
         const el = document.getElementById("productsList");
         if (!products.length) {
-            el.innerHTML = '<div class="empty-state">No products.</div>';
+            el.innerHTML = `<div class="empty-state">${t('no_products')}</div>`;
             return;
         }
         el.innerHTML = products
@@ -305,8 +305,8 @@ async function loadProducts() {
                 (p) => `
       <div class="product-card">
         <h4>${p.name}</h4>
-        <p class="prod-meta">${p.description || ""}</p>
-        <p class="prod-meta">Unit: ${p.unit} • Stock: ${p.stock_quantity} • Category: ${p.category || "—"}</p>
+        <p class="prod-meta">${p.description || ''}</p>
+        <p class="prod-meta">${t('unit_label')}: ${p.unit} • ${t('stock_label')}: ${p.stock_quantity} • ${t('category_label')}: ${p.category || '—'}</p>
         <p class="prod-price">${p.price_per_unit} DA / ${p.unit}</p>
       </div>`
             )
@@ -338,7 +338,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
     };
 
     if (!payload.name || !payload.price_per_unit) {
-        errEl.textContent = "Name and price are required.";
+        errEl.textContent = t("name_price_required");
         errEl.classList.remove("hidden");
         return;
     }
@@ -372,7 +372,7 @@ async function loadRatings() {
         const ratings = await res.json();
         const el = document.getElementById("ratingsList");
         if (!ratings.length) {
-            el.innerHTML = '<div class="empty-state">No ratings yet.</div>';
+            el.innerHTML = `<div class="empty-state">${t('no_ratings')}</div>`;
             return;
         }
         el.innerHTML = ratings
@@ -380,18 +380,51 @@ async function loadRatings() {
                 (r) => `
       <div class="order-card">
         <div class="order-main">
-          <h4>Rating #${r.id} — ${"★".repeat(r.score)}${"☆".repeat(5 - r.score)}</h4>
+          <h4>${t('rating_label')} #${r.id} — ${"★".repeat(r.score)}${"☆".repeat(5 - r.score)}</h4>
           <div class="order-meta">
-            <span>Delivery #${r.delivery_id}</span>
-            <span>Report #${r.report_id}</span>
+            <span>${t('delivery_label')} #${r.delivery_id}</span>
+            <span>${t('report_label')} #${r.report_id}</span>
             <span>🕐 ${timeAgo(r.created_at)}</span>
           </div>
-          ${r.comment ? `<p style="font-size:.85rem;color:var(--text-secondary);margin-top:.4rem">"${r.comment}"</p>` : ""}
+          ${r.comment ? `<p style="font-size:.85rem;color:var(--text-secondary);margin-top:.4rem">"${r.comment}"</p>` : ''}
         </div>
       </div>`
             )
             .join("");
     } catch { }
+}
+
+// ============================================================
+// COMPLAINTS
+// ============================================================
+async function loadComplaints() {
+    try {
+        const res = await fetch("/api/complaints");
+        if (!res.ok) return;
+        const complaints = await res.json();
+
+        const el = document.getElementById("adminComplaintsList");
+        if (!complaints.length) {
+            el.innerHTML = '<div class="empty-state">No complaints found.</div>';
+            return;
+        }
+
+        el.innerHTML = complaints.map(c => `
+            <div class="card" style="margin-bottom: 1rem; text-align: left;">
+              <div class="card-header" style="flex-direction: column; align-items: flex-start;">
+                <h4 style="margin:0">${c.subject}</h4>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.3rem 0;">${t('from_label') || 'From'}: ${c.user_name}</div>
+                <span class="status-badge status-${c.status === 'closed' ? 'delivered' : 'pending'}">${c.status === 'closed' ? t('complaint_closed') : t('complaint_open')}</span>
+              </div>
+              <div style="padding: 1rem">
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem">🕐 ${timeAgo(c.created_at)}</p>
+                  <p style="margin:0">${c.message}</p>
+              </div>
+            </div>
+        `).join("");
+    } catch {
+        console.error("Failed to load complaints");
+    }
 }
 
 // ============================================================
@@ -409,14 +442,24 @@ function showSection(name) {
     const link = document.querySelector(`.nav-link[onclick*="${name}"]`);
     if (link) link.classList.add("active");
     const titles = {
-        overview: "Dashboard",
-        map: "Shortage Map",
-        reports: "All Reports",
-        deliveries: "Deliveries",
-        products: "Products",
-        ratings: "Ratings",
+        overview: "nav_overview",
+        map: "nav_map",
+        reports: "reports_heading",
+        deliveries: "nav_deliveries",
+        products: "nav_products",
+        ratings: "nav_ratings",
+        complaints: "nav_complaints"
     };
-    document.getElementById("pageTitle").textContent = titles[name] || name;
+
+    const pageTitle = document.getElementById("pageTitle");
+    const key = titles[name] || name;
+    pageTitle.setAttribute("data-i18n", key);
+    const lang = localStorage.getItem("preferred_language") || "en";
+    if (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) {
+        pageTitle.textContent = translations[lang][key];
+    } else {
+        pageTitle.textContent = name; // Fallback
+    }
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("sidebarOverlay").classList.remove("show");
 
@@ -435,16 +478,28 @@ async function logoutUser() {
 // ============================================================
 // HELPERS
 // ============================================================
+function t(key) {
+    const lang = localStorage.getItem("preferred_language") || "en";
+    return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key])
+        ? translations[lang][key]
+        : key;
+}
+
 function formatStatus(s) {
-    const map = { pending: "⏳ Pending", assigned: "🎯 Assigned", in_transit: "🚛 In Transit", delivered: "✅ Delivered" };
-    return map[s] || s;
+    const map = {
+        pending: () => `⏳ ${t("pending")}`,
+        assigned: () => `🎯 ${t("assigned")}`,
+        in_transit: () => `🚛 ${t("in_transit")}`,
+        delivered: () => `✅ ${t("delivered")}`
+    };
+    return (map[s] ? map[s]() : s);
 }
 function timeAgo(iso) {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1) return t("just_now");
+    if (mins < 60) return `${mins}${t("min_ago")}`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
+    if (hrs < 24) return `${hrs}${t("hr_ago")}`;
+    return `${Math.floor(hrs / 24)}${t("day_ago")}`;
 }

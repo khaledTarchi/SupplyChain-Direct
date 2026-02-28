@@ -43,16 +43,18 @@
             <div class="user-avatar">🚛</div>
             <div>
                 <p class="user-name" id="sidebarUserName">Loading…</p>
-                <span class="user-badge driver">Driver</span>
+                <span class="user-badge driver" data-i18n="role_driver">Driver</span>
             </div>
         </div>
 
         <ul class="nav-links">
-            <li><a href="#active" class="nav-link active" onclick="showSection('active')">📋 Active Jobs</a></li>
-            <li><a href="#completed" class="nav-link" onclick="showSection('completed')">✅ Completed</a></li>
+            <li><a href="#active" class="nav-link active" onclick="showSection('active')" data-i18n="nav_active_jobs">📋
+                    Active Jobs</a></li>
+            <li><a href="#completed" class="nav-link" onclick="showSection('completed')" data-i18n="nav_completed">✅
+                    Completed</a></li>
         </ul>
 
-        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+        <button class="btn-logout" onclick="logoutUser()" data-i18n="sign_out">🚪 Sign Out</button>
     </nav>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -62,54 +64,63 @@
 
         <header class="topbar">
             <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
-            <h2 class="topbar-title" id="pageTitle">Active Jobs</h2>
-            <div class="topbar-actions"></div>
+            <h2 class="topbar-title" id="pageTitle" data-i18n="nav_active_jobs">Active Jobs</h2>
+            <div class="topbar-actions">
+                <select id="langSwitcher" class="lang-switcher">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                </select>
+                <span class="live-dot"></span>
+                <span data-i18n="live">Live</span>
+            </div>
         </header>
 
         <!-- ============ ACTIVE JOBS ============ -->
         <section class="content-section active" id="section-active">
-            <h1 class="section-heading">📋 Active Deliveries</h1>
-            <p class="section-sub">Update each delivery status as you progress.</p>
+            <h1 class="section-heading" data-i18n="active_jobs_heading">📋 Active Deliveries</h1>
+            <p class="section-sub" data-i18n="active_jobs_sub">Update each delivery status as you progress.</p>
 
             <div class="stats-grid">
                 <div class="stat-card stat-amber">
                     <div class="stat-icon">🎯</div>
                     <div class="stat-info">
                         <p class="stat-value" id="d-assigned">—</p>
-                        <p class="stat-label">Assigned</p>
+                        <p class="stat-label" data-i18n="assigned">Assigned</p>
                     </div>
                 </div>
                 <div class="stat-card stat-purple">
                     <div class="stat-icon">🚛</div>
                     <div class="stat-info">
                         <p class="stat-value" id="d-transit">—</p>
-                        <p class="stat-label">In Transit</p>
+                        <p class="stat-label" data-i18n="in_transit">In Transit</p>
                     </div>
                 </div>
                 <div class="stat-card stat-green">
                     <div class="stat-icon">✅</div>
                     <div class="stat-info">
                         <p class="stat-value" id="d-done">—</p>
-                        <p class="stat-label">Completed</p>
+                        <p class="stat-label" data-i18n="driver_completed">Completed</p>
                     </div>
                 </div>
             </div>
 
             <div id="activeJobsList" class="order-cards-grid">
-                <div class="empty-state">Loading…</div>
+                <div class="empty-state" data-i18n="loading">Loading…</div>
             </div>
         </section>
 
         <!-- ============ COMPLETED ============ -->
         <section class="content-section" id="section-completed">
-            <h1 class="section-heading">✅ Completed Deliveries</h1>
+            <h1 class="section-heading" data-i18n="completed_heading">✅ Completed Deliveries</h1>
             <div id="completedJobsList" class="order-cards-grid">
-                <div class="empty-state">Loading…</div>
+                <div class="empty-state" data-i18n="loading">Loading…</div>
             </div>
         </section>
 
     </div>
 
+    <script src="/static/js/i18n.js"></script>
     <script src="/static/js/driver.js"></script>
 </body>
 

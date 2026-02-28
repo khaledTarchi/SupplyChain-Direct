@@ -46,20 +46,23 @@
             <div class="user-avatar">👑</div>
             <div>
                 <p class="user-name" id="sidebarUserName">Loading…</p>
-                <span class="user-badge admin">Admin</span>
+                <span class="user-badge admin" data-i18n="role_admin">Admin</span>
             </div>
         </div>
 
         <ul class="nav-links">
-            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')">📊 Dashboard</a></li>
+            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')"
+                    data-i18n="nav_overview">📊 Dashboard</a></li>
             <li><a href="#map" class="nav-link" onclick="showSection('map')">🗺️ Shortage Map</a></li>
             <li><a href="#reports" class="nav-link" onclick="showSection('reports')">📋 Reports</a></li>
             <li><a href="#deliveries" class="nav-link" onclick="showSection('deliveries')">🚛 Deliveries</a></li>
             <li><a href="#products" class="nav-link" onclick="showSection('products')">📦 Products</a></li>
             <li><a href="#ratings" class="nav-link" onclick="showSection('ratings')">⭐ Ratings</a></li>
+            <li><a href="#complaints" class="nav-link" onclick="showSection('complaints')" data-i18n="nav_complaints">📝
+                    Complaints</a></li>
         </ul>
 
-        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+        <button class="btn-logout" onclick="logoutUser()" data-i18n="sign_out">🚪 Sign Out</button>
     </nav>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -71,56 +74,61 @@
             <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
             <h2 class="topbar-title" id="pageTitle">Dashboard</h2>
             <div class="topbar-actions">
+                <select id="langSwitcher" class="lang-switcher">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                </select>
                 <span class="live-dot"></span>
-                <span>Live</span>
+                <span data-i18n="live">Live</span>
             </div>
         </header>
 
         <!-- ============ OVERVIEW ============ -->
         <section class="content-section active" id="section-overview">
-            <h1 class="section-heading">📊 Overview</h1>
+            <h1 class="section-heading" data-i18n="overview_heading">📊 Overview</h1>
 
             <div class="stats-grid stats-grid-6">
                 <div class="stat-card stat-blue">
                     <div class="stat-icon">📋</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-total">—</p>
-                        <p class="stat-label">Total Reports</p>
+                        <p class="stat-label" data-i18n="total_reports">Total Reports</p>
                     </div>
                 </div>
                 <div class="stat-card stat-amber">
                     <div class="stat-icon">⏳</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-pending">—</p>
-                        <p class="stat-label">Pending</p>
+                        <p class="stat-label" data-i18n="pending">Pending</p>
                     </div>
                 </div>
                 <div class="stat-card stat-purple">
                     <div class="stat-icon">🚛</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-transit">—</p>
-                        <p class="stat-label">In Transit</p>
+                        <p class="stat-label" data-i18n="in_transit">In Transit</p>
                     </div>
                 </div>
                 <div class="stat-card stat-green">
                     <div class="stat-icon">✅</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-delivered">—</p>
-                        <p class="stat-label">Delivered</p>
+                        <p class="stat-label" data-i18n="delivered">Delivered</p>
                     </div>
                 </div>
                 <div class="stat-card stat-cyan">
                     <div class="stat-icon">🚛</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-drivers">—</p>
-                        <p class="stat-label">Active Drivers</p>
+                        <p class="stat-label" data-i18n="active_drivers">Active Drivers</p>
                     </div>
                 </div>
                 <div class="stat-card stat-rose">
                     <div class="stat-icon">⭐</div>
                     <div class="stat-info">
                         <p class="stat-value" id="s-rating">—</p>
-                        <p class="stat-label">Avg Rating</p>
+                        <p class="stat-label" data-i18n="avg_rating">Avg Rating</p>
                     </div>
                 </div>
             </div>
@@ -128,8 +136,8 @@
             <!-- Mini map preview -->
             <div class="card">
                 <div class="card-header">
-                    <h3>🗺️ Shortage Heatmap Preview</h3>
-                    <button class="btn-link" onclick="showSection('map')">Fullscreen →</button>
+                    <h3 data-i18n="heatmap_preview">🗺️ Shortage Heatmap Preview</h3>
+                    <button class="btn-link" onclick="showSection('map')" data-i18n="fullscreen">Fullscreen →</button>
                 </div>
                 <div id="miniMap" class="mini-map"></div>
             </div>
@@ -137,8 +145,8 @@
             <!-- Pending reports quick list -->
             <div class="card">
                 <div class="card-header">
-                    <h3>⏳ Pending Reports</h3>
-                    <button class="btn-link" onclick="showSection('reports')">View all →</button>
+                    <h3 data-i18n="pending_reports">⏳ Pending Reports</h3>
+                    <button class="btn-link" onclick="showSection('reports')" data-i18n="view_all">View all →</button>
                 </div>
                 <div id="pendingQuickList" class="order-list">
                     <div class="empty-state">Loading…</div>
@@ -148,22 +156,23 @@
 
         <!-- ============ MAP ============ -->
         <section class="content-section" id="section-map">
-            <h1 class="section-heading">🗺️ Critical Shortage Map</h1>
-            <p class="section-sub">Red markers show pending shortages; orange shows assigned. Click a marker for
+            <h1 class="section-heading" data-i18n="map_heading">🗺️ Critical Shortage Map</h1>
+            <p class="section-sub" data-i18n="map_sub">Red markers show pending shortages; orange shows assigned. Click
+                a marker for
                 details.</p>
             <div id="fullMap" class="full-map"></div>
         </section>
 
         <!-- ============ REPORTS ============ -->
         <section class="content-section" id="section-reports">
-            <h1 class="section-heading">📋 All Shortage Reports</h1>
+            <h1 class="section-heading" data-i18n="reports_heading">📋 All Shortage Reports</h1>
             <div class="filter-bar">
                 <select id="adminReportFilter" onchange="filterAdminReports(this.value)">
-                    <option value="all">All Statuses</option>
-                    <option value="pending">⏳ Pending</option>
-                    <option value="assigned">🎯 Assigned</option>
-                    <option value="in_transit">🚛 In Transit</option>
-                    <option value="delivered">✅ Delivered</option>
+                    <option value="all" data-i18n="filter_all">All Statuses</option>
+                    <option value="pending" data-i18n="filter_pending">⏳ Pending</option>
+                    <option value="assigned" data-i18n="filter_assigned">🎯 Assigned</option>
+                    <option value="in_transit" data-i18n="filter_transit">🚛 In Transit</option>
+                    <option value="delivered" data-i18n="filter_delivered">✅ Delivered</option>
                 </select>
             </div>
             <div id="adminReportsList" class="order-cards-grid">
@@ -173,7 +182,7 @@
 
         <!-- ============ DELIVERIES ============ -->
         <section class="content-section" id="section-deliveries">
-            <h1 class="section-heading">🚛 Deliveries</h1>
+            <h1 class="section-heading" data-i18n="deliveries_heading">🚛 Deliveries</h1>
             <div id="adminDeliveriesList" class="order-cards-grid">
                 <div class="empty-state">Loading…</div>
             </div>
@@ -181,8 +190,8 @@
 
         <!-- ============ PRODUCTS ============ -->
         <section class="content-section" id="section-products">
-            <h1 class="section-heading">📦 Product Catalogue</h1>
-            <button class="btn-primary" onclick="openProductModal()">＋ Add Product</button>
+            <h1 class="section-heading" data-i18n="products_heading">📦 Product Catalogue</h1>
+            <button class="btn-primary" onclick="openProductModal()" data-i18n="add_product_btn">＋ Add Product</button>
             <div id="productsList" class="product-grid" style="margin-top:1rem;">
                 <div class="empty-state">Loading…</div>
             </div>
@@ -190,8 +199,16 @@
 
         <!-- ============ RATINGS ============ -->
         <section class="content-section" id="section-ratings">
-            <h1 class="section-heading">⭐ Driver Ratings</h1>
+            <h1 class="section-heading" data-i18n="ratings_heading">⭐ Driver Ratings</h1>
             <div id="ratingsList" class="order-cards-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ COMPLAINTS ============ -->
+        <section class="content-section" id="section-complaints">
+            <h1 class="section-heading" data-i18n="nav_complaints">📝 Complaints</h1>
+            <div id="adminComplaintsList" class="order-cards-grid">
                 <div class="empty-state">Loading…</div>
             </div>
         </section>
@@ -202,13 +219,13 @@
     <div class="modal-overlay hidden" id="assignModal">
         <div class="modal-card">
             <button class="modal-close" onclick="closeAssignModal()">✕</button>
-            <h3>🎯 Assign Driver</h3>
+            <h3 data-i18n="assign_driver_title">🎯 Assign Driver</h3>
             <p id="assignReportInfo"></p>
             <div class="form-group">
-                <label for="driverSelect">Select Driver</label>
+                <label for="driverSelect" data-i18n="select_driver">Select Driver</label>
                 <select id="driverSelect"></select>
             </div>
-            <button class="btn-primary btn-full" onclick="confirmAssign()">Assign Now</button>
+            <button class="btn-primary btn-full" onclick="confirmAssign()" data-i18n="assign_now">Assign Now</button>
             <div id="assignError" class="form-error hidden"></div>
         </div>
     </div>
@@ -217,44 +234,45 @@
     <div class="modal-overlay hidden" id="productModal">
         <div class="modal-card">
             <button class="modal-close" onclick="closeProductModal()">✕</button>
-            <h3>📦 Add New Product</h3>
+            <h3 data-i18n="add_product_title">📦 Add New Product</h3>
             <form id="productForm" novalidate>
                 <div class="form-group">
-                    <label for="prod-name">Product Name</label>
+                    <label for="prod-name" data-i18n="prod_name">Product Name</label>
                     <input type="text" id="prod-name" required placeholder="e.g. Huile de table 5L" />
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="prod-price">Price / Unit</label>
+                        <label for="prod-price" data-i18n="prod_price">Price / Unit</label>
                         <input type="number" id="prod-price" min="0" step="0.01" required placeholder="850" />
                     </div>
                     <div class="form-group">
-                        <label for="prod-stock">Stock Qty</label>
+                        <label for="prod-stock" data-i18n="prod_stock">Stock Qty</label>
                         <input type="number" id="prod-stock" min="0" value="0" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="prod-unit">Unit</label>
+                        <label for="prod-unit" data-i18n="prod_unit">Unit</label>
                         <input type="text" id="prod-unit" placeholder="kg, box, crate" value="unit" />
                     </div>
                     <div class="form-group">
-                        <label for="prod-cat">Category</label>
+                        <label for="prod-cat" data-i18n="prod_cat">Category</label>
                         <input type="text" id="prod-cat" placeholder="Épicerie" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="prod-desc">Description</label>
+                    <label for="prod-desc" data-i18n="prod_desc">Description</label>
                     <textarea id="prod-desc" rows="2" placeholder="Optional…"></textarea>
                 </div>
                 <div id="productError" class="form-error hidden"></div>
-                <button type="submit" class="btn-primary btn-full">Save Product</button>
+                <button type="submit" class="btn-primary btn-full" data-i18n="save_product">Save Product</button>
             </form>
         </div>
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/static/js/i18n.js"></script>
     <script src="/static/js/admin.js"></script>
 </body>
 

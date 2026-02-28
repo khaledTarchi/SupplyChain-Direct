@@ -48,18 +48,24 @@
             <div class="user-avatar">🏪</div>
             <div>
                 <p class="user-name" id="sidebarUserName">Loading…</p>
-                <span class="user-badge shop">Shop Owner</span>
+                <span class="user-badge shop" data-i18n="role_shop">Shop Owner</span>
             </div>
         </div>
 
         <ul class="nav-links">
-            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')">📊 Overview</a></li>
-            <li><a href="#report" class="nav-link" onclick="showSection('report')">🚨 Report Shortage</a></li>
-            <li><a href="#orders" class="nav-link" onclick="showSection('orders')">📦 My Orders</a></li>
-            <li><a href="#deliveries" class="nav-link" onclick="showSection('deliveries')">🚛 Deliveries</a></li>
+            <li><a href="#overview" class="nav-link active" onclick="showSection('overview')"
+                    data-i18n="nav_overview">📊 Overview</a></li>
+            <li><a href="#report" class="nav-link" onclick="showSection('report')" data-i18n="nav_report">🚨 Report
+                    Shortage</a></li>
+            <li><a href="#orders" class="nav-link" onclick="showSection('orders')" data-i18n="nav_orders">📦 My
+                    Orders</a></li>
+            <li><a href="#deliveries" class="nav-link" onclick="showSection('deliveries')" data-i18n="nav_deliveries">🚛
+                    Deliveries</a></li>
+            <li><a href="#complaints" class="nav-link" onclick="showSection('complaints')" data-i18n="nav_complaints">📝
+                    Complaints</a></li>
         </ul>
 
-        <button class="btn-logout" onclick="logoutUser()">🚪 Sign Out</button>
+        <button class="btn-logout" onclick="logoutUser()" data-i18n="sign_out">🚪 Sign Out</button>
     </nav>
 
     <!-- OVERLAY for mobile sidebar -->
@@ -73,9 +79,14 @@
             <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
             <h2 class="topbar-title" id="pageTitle">Overview</h2>
             <div class="topbar-actions">
+                <select id="langSwitcher" class="lang-switcher">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                </select>
                 <div class="signal-indicator" id="signalBadge" title="Network status">
                     <span class="signal-dot online"></span>
-                    <span class="signal-label">Online</span>
+                    <span class="signal-label" data-i18n="online">Online</span>
                 </div>
             </div>
         </header>
@@ -83,8 +94,8 @@
         <!-- ============ SECTION: OVERVIEW ============ -->
         <section class="content-section active" id="section-overview">
             <div class="page-greeting">
-                <h1>Welcome back, <span id="greetName">Shop Owner</span> 👋</h1>
-                <p>Here is your supply chain activity at a glance.</p>
+                <h1><span data-i18n="welcome_back">Welcome back</span>, <span id="greetName">Shop Owner</span> 👋</h1>
+                <p data-i18n="shop_sub">Here is your supply chain activity at a glance.</p>
             </div>
 
             <!-- Stats cards -->
@@ -93,28 +104,28 @@
                     <div class="stat-icon">📋</div>
                     <div class="stat-info">
                         <p class="stat-value" id="stat-total">—</p>
-                        <p class="stat-label">Total Reports</p>
+                        <p class="stat-label" data-i18n="total_reports">Total Reports</p>
                     </div>
                 </div>
                 <div class="stat-card stat-amber">
                     <div class="stat-icon">⏳</div>
                     <div class="stat-info">
                         <p class="stat-value" id="stat-pending">—</p>
-                        <p class="stat-label">Pending</p>
+                        <p class="stat-label" data-i18n="pending">Pending</p>
                     </div>
                 </div>
                 <div class="stat-card stat-purple">
                     <div class="stat-icon">🚛</div>
                     <div class="stat-info">
                         <p class="stat-value" id="stat-transit">—</p>
-                        <p class="stat-label">In Transit</p>
+                        <p class="stat-label" data-i18n="in_transit">In Transit</p>
                     </div>
                 </div>
                 <div class="stat-card stat-green">
                     <div class="stat-icon">✅</div>
                     <div class="stat-info">
                         <p class="stat-value" id="stat-delivered">—</p>
-                        <p class="stat-label">Delivered</p>
+                        <p class="stat-label" data-i18n="delivered">Delivered</p>
                     </div>
                 </div>
             </div>
@@ -122,8 +133,8 @@
             <!-- Recent orders mini-list -->
             <div class="card">
                 <div class="card-header">
-                    <h3>Recent Orders</h3>
-                    <button class="btn-link" onclick="showSection('orders')">View all →</button>
+                    <h3 data-i18n="recent_orders">Recent Orders</h3>
+                    <button class="btn-link" onclick="showSection('orders')" data-i18n="view_all">View all →</button>
                 </div>
                 <div id="recentOrdersList" class="order-list">
                     <div class="empty-state">Loading your orders…</div>
@@ -133,8 +144,9 @@
 
         <!-- ============ SECTION: REPORT SHORTAGE ============ -->
         <section class="content-section" id="section-report">
-            <h1 class="section-heading">🚨 Report a Product Shortage</h1>
-            <p class="section-sub">Your GPS location will be attached automatically to help the wholesaler locate your
+            <h1 class="section-heading" data-i18n="report_heading">🚨 Report a Product Shortage</h1>
+            <p class="section-sub" data-i18n="report_sub">Your GPS location will be attached automatically to help the
+                wholesaler locate your
                 shop.</p>
 
             <div class="card report-card">
@@ -142,7 +154,7 @@
 
                     <!-- Product selector -->
                     <div class="form-group">
-                        <label for="product-select">Select Product</label>
+                        <label for="product-select" data-i18n="select_product">Select Product</label>
                         <div class="input-wrapper">
                             <span class="input-icon">📦</span>
                             <select id="product-select" required>
@@ -154,14 +166,14 @@
                     <!-- Quantity + Shop name in a row -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="qty-input">Quantity Needed</label>
+                            <label for="qty-input" data-i18n="qty_needed">Quantity Needed</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔢</span>
                                 <input type="number" id="qty-input" min="1" max="9999" value="1" required />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="shop-name-input">Shop Name</label>
+                            <label for="shop-name-input" data-i18n="shop_name">Shop Name</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🏪</span>
                                 <input type="text" id="shop-name-input" placeholder="e.g. Épicerie Centrale" />
@@ -171,7 +183,7 @@
 
                     <!-- Notes -->
                     <div class="form-group">
-                        <label for="notes-input">Additional Notes</label>
+                        <label for="notes-input" data-i18n="additional_notes">Additional Notes</label>
                         <textarea id="notes-input" rows="3"
                             placeholder="Describe urgency or any special instructions…"></textarea>
                     </div>
@@ -180,9 +192,9 @@
                     <div class="gps-widget" id="gpsWidget">
                         <div class="gps-status" id="gpsStatus">
                             <span class="gps-icon">📍</span>
-                            <span id="gpsText">Tap to fetch your GPS location</span>
+                            <span id="gpsText" data-i18n="tap_gps">Tap to fetch your GPS location</span>
                         </div>
-                        <button type="button" class="btn-gps" id="gpsBtn" onclick="getGPS()">
+                        <button type="button" class="btn-gps" id="gpsBtn" onclick="getGPS()" data-i18n="get_location">
                             Get My Location
                         </button>
                         <div class="gps-coords hidden" id="gpsCoords">
@@ -194,7 +206,7 @@
                     <div id="reportSuccess" class="form-success hidden"></div>
 
                     <button type="submit" class="btn-primary btn-full" id="reportBtn" disabled>
-                        <span class="btn-text">📤 Submit Report</span>
+                        <span class="btn-text" data-i18n="submit_report">📤 Submit Report</span>
                         <span class="btn-loader hidden"></span>
                     </button>
                 </form>
@@ -203,14 +215,14 @@
 
         <!-- ============ SECTION: MY ORDERS ============ -->
         <section class="content-section" id="section-orders">
-            <h1 class="section-heading">📦 My Orders &amp; Reports</h1>
+            <h1 class="section-heading" data-i18n="orders_heading">📦 My Orders &amp; Reports</h1>
             <div class="filter-bar">
                 <select id="orderFilter" onchange="filterOrders(this.value)">
-                    <option value="all">All Statuses</option>
-                    <option value="pending">⏳ Pending</option>
-                    <option value="assigned">🎯 Assigned</option>
-                    <option value="in_transit">🚛 In Transit</option>
-                    <option value="delivered">✅ Delivered</option>
+                    <option value="all" data-i18n="filter_all">All Statuses</option>
+                    <option value="pending" data-i18n="filter_pending">⏳ Pending</option>
+                    <option value="assigned" data-i18n="filter_assigned">🎯 Assigned</option>
+                    <option value="in_transit" data-i18n="filter_transit">🚛 In Transit</option>
+                    <option value="delivered" data-i18n="filter_delivered">✅ Delivered</option>
                 </select>
             </div>
             <div id="ordersList" class="order-cards-grid">
@@ -220,8 +232,22 @@
 
         <!-- ============ SECTION: DELIVERIES / FEEDBACK ============ -->
         <section class="content-section" id="section-deliveries">
-            <h1 class="section-heading">🚛 Deliveries &amp; Feedback</h1>
+            <h1 class="section-heading" data-i18n="deliveries_feedback_heading">🚛 Deliveries &amp; Feedback</h1>
             <div id="deliveriesList" class="deliveries-grid">
+                <div class="empty-state">Loading…</div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: COMPLAINTS ============ -->
+        <section class="content-section" id="section-complaints">
+            <h1 class="section-heading" data-i18n="nav_complaints">📝 Complaints</h1>
+            <p class="section-sub" data-i18n="complaints_sub">Submit an issue relating to products, delivery quality,
+                etc.</p>
+
+            <button class="btn-primary" onclick="openComplaintModal()" style="margin-bottom: 2rem;"
+                data-i18n="report_complaint_btn">Submit a Complaint</button>
+
+            <div id="complaintsList" class="order-cards-grid">
                 <div class="empty-state">Loading…</div>
             </div>
         </section>
@@ -232,7 +258,7 @@
     <div class="modal-overlay hidden" id="ratingModal">
         <div class="modal-card">
             <button class="modal-close" onclick="closeRatingModal()">✕</button>
-            <h3>Rate Your Delivery ⭐</h3>
+            <h3 data-i18n="rate_delivery_title">Rate Your Delivery ⭐</h3>
             <p id="ratingDeliveryInfo"></p>
             <div class="star-row" id="starRow">
                 <span class="star" data-v="1" onclick="selectStar(1)">★</span>
@@ -242,11 +268,38 @@
                 <span class="star" data-v="5" onclick="selectStar(5)">★</span>
             </div>
             <textarea id="ratingComment" rows="3" placeholder="Optional comment…"></textarea>
-            <button class="btn-primary btn-full" onclick="submitRating()">Submit Feedback</button>
+            <button class="btn-primary btn-full" onclick="submitRating()" data-i18n="submit_feedback">Submit
+                Feedback</button>
             <div id="ratingError" class="form-error hidden"></div>
         </div>
     </div>
 
+    <!-- Complaint Modal -->
+    <div class="modal-overlay hidden" id="complaintModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeComplaintModal()">✕</button>
+            <h3 data-i18n="complaint_modal_title">Submit a Complaint</h3>
+
+            <div class="form-group" style="margin-top: 1rem;">
+                <label data-i18n="complaint_subject">Subject</label>
+                <div class="input-wrapper">
+                    <input type="text" id="complaintSubject" placeholder="e.g. Broken items" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="complaint_message">Message</label>
+                <textarea id="complaintMessage" rows="4" placeholder="Describe the issue..." required></textarea>
+            </div>
+
+            <button class="btn-primary btn-full" onclick="submitComplaint()"
+                data-i18n="complaint_submit">Submit</button>
+            <div id="complaintError" class="form-error hidden" style="margin-top: 1rem;"></div>
+            <div id="complaintSuccess" class="form-success hidden" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/i18n.js"></script>
     <script src="/static/js/shop.js"></script>
 </body>
 

@@ -58,7 +58,7 @@ function renderActiveJobs() {
     const el = document.getElementById("activeJobsList");
     const active = driverDeliveries.filter((d) => d.status !== "delivered");
     if (!active.length) {
-        el.innerHTML = '<div class="empty-state">No active jobs. Enjoy your break! ☕</div>';
+        el.innerHTML = `<div class="empty-state">${t("no_active_jobs")}</div>`;
         return;
     }
     el.innerHTML = active
@@ -67,22 +67,22 @@ function renderActiveJobs() {
             return `
       <div class="order-card">
         <div class="order-main">
-          <h4>${report ? report.product_name : "Delivery #" + d.id}</h4>
+          <h4>${report ? report.product_name : t("delivery_label") + " #" + d.id}</h4>
           <span class="status-badge status-${d.status}">${formatStatus(d.status)}</span>
           <div class="order-meta">
-            ${report ? `<span>Shop: ${report.shop_name || report.shop_owner_name || "—"}</span>` : ""}
-            ${report ? `<span>Qty: ${report.quantity_requested}</span>` : ""}
+            ${report ? `<span>${t("shop_label")}: ${report.shop_name || report.shop_owner_name || "—"}</span>` : ""}
+            ${report ? `<span>${t("qty_label")}: ${report.quantity_requested}</span>` : ""}
             ${report ? `<span>📍 ${report.latitude.toFixed(4)}, ${report.longitude.toFixed(4)}</span>` : ""}
-            <span>🕐 Assigned: ${timeAgo(d.assigned_at)}</span>
+            <span>🕐 ${t("assigned_label")}: ${timeAgo(d.assigned_at)}</span>
           </div>
         </div>
         <div class="order-actions">
           ${d.status === "assigned"
-                    ? `<button class="btn-sm btn-warning" onclick="updateStatus(${d.id},'in_transit')">🚛 Start Delivery</button>`
+                    ? `<button class="btn-sm btn-warning" onclick="updateStatus(${d.id},'in_transit')">🚛 ${t("start_delivery")}</button>`
                     : ""
                 }
           ${d.status === "in_transit"
-                    ? `<button class="btn-sm btn-success" onclick="updateStatus(${d.id},'delivered')">✅ Mark Delivered</button>`
+                    ? `<button class="btn-sm btn-success" onclick="updateStatus(${d.id},'delivered')">✅ ${t("mark_delivered")}</button>`
                     : ""
                 }
         </div>
@@ -98,7 +98,7 @@ function renderCompletedJobs() {
     const el = document.getElementById("completedJobsList");
     const done = driverDeliveries.filter((d) => d.status === "delivered");
     if (!done.length) {
-        el.innerHTML = '<div class="empty-state">No completed deliveries yet.</div>';
+        el.innerHTML = `<div class="empty-state">${t("no_completed_jobs")}</div>`;
         return;
     }
     el.innerHTML = done
@@ -107,13 +107,13 @@ function renderCompletedJobs() {
             return `
       <div class="order-card">
         <div class="order-main">
-          <h4>${report ? report.product_name : "Delivery #" + d.id}</h4>
-          <span class="status-badge status-delivered">✅ Delivered</span>
+          <h4>${report ? report.product_name : t("delivery_label") + " #" + d.id}</h4>
+          <span class="status-badge status-delivered">✅ ${t("delivered")}</span>
           <div class="order-meta">
-            ${report ? `<span>Shop: ${report.shop_name || "—"}</span>` : ""}
-            <span>Delivered: ${d.delivered_at ? timeAgo(d.delivered_at) : "—"}</span>
+            ${report ? `<span>${t("shop_label")}: ${report.shop_name || "—"}</span>` : ""}
+            <span>${t("delivered_label")}: ${d.delivered_at ? timeAgo(d.delivered_at) : "—"}</span>
           </div>
-          ${d.driver_notes ? `<p style="font-size:.85rem;color:var(--text-secondary);margin-top:.3rem">Note: "${d.driver_notes}"</p>` : ""}
+          ${d.driver_notes ? `<p style="font-size:.85rem;color:var(--text-secondary);margin-top:.3rem">${t("note_label")}: "${d.driver_notes}"</p>` : ""}
         </div>
       </div>`;
         })
@@ -132,12 +132,12 @@ async function updateStatus(deliveryId, newStatus) {
         });
         if (!res.ok) {
             const data = await res.json();
-            alert(data.error || "Failed to update status.");
+            alert(data.error || t("status_update_fail"));
             return;
         }
         await loadDriverData();
     } catch {
-        alert("Network error. Please try again.");
+        alert(t("network_error"));
     }
 }
 
@@ -155,8 +155,16 @@ function showSection(name) {
     document.querySelectorAll(".nav-link").forEach((l) => l.classList.remove("active"));
     const link = document.querySelector(`.nav-link[onclick*="${name}"]`);
     if (link) link.classList.add("active");
-    const titles = { active: "Active Jobs", completed: "Completed" };
-    document.getElementById("pageTitle").textContent = titles[name] || name;
+
+    const titles = {
+        active: "nav_active_jobs",
+        completed: "nav_completed"
+    };
+    const pageTitle = document.getElementById("pageTitle");
+    const key = titles[name] || name;
+    pageTitle.setAttribute("data-i18n", key);
+    pageTitle.textContent = t(key);
+
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("sidebarOverlay").classList.remove("show");
 }
@@ -181,15 +189,29 @@ function registerServiceWorker() {
 // ============================================================
 // HELPERS
 // ============================================================
-function formatStatus(s) {
-    return { pending: "⏳ Pending", assigned: "🎯 Assigned", in_transit: "🚛 In Transit", delivered: "✅ Delivered" }[s] || s;
+function t(key) {
+    const lang = localStorage.getItem("preferred_language") || "en";
+    return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key])
+        ? translations[lang][key]
+        : key;
 }
+
+function formatStatus(s) {
+    const map = {
+        pending: () => `⏳ ${t("pending")}`,
+        assigned: () => `🎯 ${t("assigned")}`,
+        in_transit: () => `🚛 ${t("in_transit")}`,
+        delivered: () => `✅ ${t("delivered")}`
+    };
+    return (map[s] ? map[s]() : s);
+}
+
 function timeAgo(iso) {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1) return t("just_now");
+    if (mins < 60) return `${mins}${t("min_ago")}`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
+    if (hrs < 24) return `${hrs}${t("hr_ago")}`;
+    return `${Math.floor(hrs / 24)}${t("day_ago")}`;
 }

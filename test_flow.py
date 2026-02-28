@@ -53,5 +53,15 @@ def run_tests():
     })
     print("Rate Delivery:", r.json())
 
+    # 7. Shop Owner creates a Complaint
+    r = s1.post(f"{BASE_URL}/api/complaints", json={
+        "subject": "Missing items", "message": "My delivery was short by 2 items."
+    })
+    print("Create Complaint (Shop):", r.json())
+
+    # 8. Admin retrieves Complaints
+    r = s2.get(f"{BASE_URL}/api/complaints")
+    print("Get Complaints (Admin):", r.json())
+
 if __name__ == "__main__":
     run_tests()
