@@ -54,19 +54,34 @@ async function loadStats() {
 // LEAFLET MAP(S)
 // ============================================================
 function initMaps() {
-    // Mini map in overview
-    miniLeafletMap = L.map("miniMap").setView([36.75, 3.06], 6);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
+    // Skikda wilaya center & bounds
+    const SKIKDA_CENTER = [36.876, 6.905];
+    const SKIKDA_ZOOM = 11;
+    const SKIKDA_BOUNDS = L.latLngBounds([36.60, 6.55], [37.20, 7.30]);
+
+    const TILE_OPTS = {
+        minZoom: 10,
+        maxZoom: 14,
         attribution: "© OpenStreetMap",
-    }).addTo(miniLeafletMap);
+    };
+
+    // Mini map in overview
+    miniLeafletMap = L.map("miniMap", {
+        minZoom: 10,
+        maxZoom: 14,
+        maxBounds: SKIKDA_BOUNDS,
+        maxBoundsViscosity: 1.0,
+    }).setView(SKIKDA_CENTER, SKIKDA_ZOOM);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", TILE_OPTS).addTo(miniLeafletMap);
 
     // Full map
-    leafletMap = L.map("fullMap").setView([36.75, 3.06], 6);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
-        attribution: "© OpenStreetMap",
-    }).addTo(leafletMap);
+    leafletMap = L.map("fullMap", {
+        minZoom: 10,
+        maxZoom: 14,
+        maxBounds: SKIKDA_BOUNDS,
+        maxBoundsViscosity: 1.0,
+    }).setView(SKIKDA_CENTER, SKIKDA_ZOOM);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", TILE_OPTS).addTo(leafletMap);
 
     loadHeatmapData();
 
@@ -122,12 +137,7 @@ async function loadHeatmapData() {
             mapMarkers.push(m1, m2);
         });
 
-        // Fit bounds
-        if (points.length) {
-            const bounds = L.latLngBounds(points.map((p) => [p.lat, p.lng]));
-            miniLeafletMap.fitBounds(bounds, { padding: [30, 30] });
-            leafletMap.fitBounds(bounds, { padding: [30, 30] });
-        }
+        // Map stays fixed on Skikda – no fitBounds on markers.
     } catch { }
 }
 
