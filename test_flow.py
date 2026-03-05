@@ -4,7 +4,7 @@ import requests
 BASE_URL = "http://127.0.0.1:5000"
 
 def run_tests():
-    print("Testing SupplyChain-Direct API...")
+    print("Testing DistribDZ Online API...")
     s1 = requests.Session() # Shop Owner
     s2 = requests.Session() # Admin
     s3 = requests.Session() # Driver

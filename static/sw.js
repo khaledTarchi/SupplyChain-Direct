@@ -1,5 +1,5 @@
 /**
- * sw.js – SupplyChain-Direct Service Worker
+ * sw.js – DistribDZ Online Service Worker
  * Strategy: Cache-First for static assets, Network-First for API calls.
  * Background Sync: re-submits queued shortage reports when connectivity is restored.
  */

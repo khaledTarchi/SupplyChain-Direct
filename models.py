@@ -1,5 +1,5 @@
 """
-models.py – SQLAlchemy ORM Models for SupplyChain-Direct
+models.py – SQLAlchemy ORM Models for DistribDZ Online
 ---------------------------------------------------------
 Tables:
   - User        : Stores all users (admin/wholesaler, shop_owner, driver)

@@ -1,6 +1,6 @@
 {
-  "name": "SupplyChain-Direct",
-  "short_name": "SCD",
+  "name": "DistribDZ Online",
+  "short_name": "DDZ",
   "description": "Direct connection between wholesalers and shop owners for supply chain management.",
   "start_url": "/",
   "scope": "/",

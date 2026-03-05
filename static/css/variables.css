@@ -1,9 +1,9 @@
 /* ============================================================
-   variables.css – SupplyChain-Direct Design Tokens
+   variables.css – DistribDZ Online Design Tokens
    ============================================================ */
 :root {
   /* — Brand palette — */
-  --brand-50:  #eef2ff;
+  --brand-50: #eef2ff;
   --brand-100: #e0e7ff;
   --brand-200: #c7d2fe;
   --brand-300: #a5b4fc;
@@ -15,7 +15,7 @@
   --brand-900: #312e81;
 
   /* — Neutral — */
-  --slate-50:  #f8fafc;
+  --slate-50: #f8fafc;
   --slate-100: #f1f5f9;
   --slate-200: #e2e8f0;
   --slate-300: #cbd5e1;
@@ -32,27 +32,27 @@
   --green-600: #16a34a;
   --amber-400: #fbbf24;
   --amber-500: #f59e0b;
-  --red-500:   #ef4444;
-  --red-600:   #dc2626;
-  --cyan-400:  #22d3ee;
-  --cyan-500:  #06b6d4;
-  --rose-400:  #fb7185;
-  --rose-500:  #f43f5e;
-  --purple-400:#a78bfa;
-  --purple-500:#8b5cf6;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --cyan-400: #22d3ee;
+  --cyan-500: #06b6d4;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --purple-400: #a78bfa;
+  --purple-500: #8b5cf6;
 
   /* — Surfaces — */
-  --bg-body:    var(--slate-950);
+  --bg-body: var(--slate-950);
   --bg-surface: var(--slate-900);
-  --bg-card:    rgba(30, 41, 59, .65);
-  --bg-elevated:rgba(51, 65, 85, .5);
+  --bg-card: rgba(30, 41, 59, .65);
+  --bg-elevated: rgba(51, 65, 85, .5);
   --border-default: rgba(148, 163, 184, .12);
-  --border-focus:   var(--brand-400);
+  --border-focus: var(--brand-400);
 
   /* — Text — */
-  --text-primary:   var(--slate-50);
+  --text-primary: var(--slate-50);
   --text-secondary: var(--slate-400);
-  --text-muted:     var(--slate-500);
+  --text-muted: var(--slate-500);
 
   /* — Font — */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -63,7 +63,7 @@
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2rem;
-  --space-2xl:3rem;
+  --space-2xl: 3rem;
 
   /* — Radii — */
   --radius-sm: .5rem;
@@ -73,16 +73,16 @@
   --radius-full: 9999px;
 
   /* — Shadows — */
-  --shadow-sm:  0 1px 2px rgba(0,0,0,.25);
-  --shadow-md:  0 4px 12px rgba(0,0,0,.3);
-  --shadow-lg:  0 8px 30px rgba(0,0,0,.35);
-  --shadow-glow:0 0 20px rgba(99,102,241,.25);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .3);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, .35);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, .25);
 
   /* — Transitions — */
-  --ease-out: cubic-bezier(.22,1,.36,1);
-  --trans-fast:  150ms var(--ease-out);
-  --trans-normal:250ms var(--ease-out);
-  --trans-slow:  400ms var(--ease-out);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --trans-fast: 150ms var(--ease-out);
+  --trans-normal: 250ms var(--ease-out);
+  --trans-slow: 400ms var(--ease-out);
 
   /* — Sidebar — */
   --sidebar-width: 260px;

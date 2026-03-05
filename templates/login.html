@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SupplyChain-Direct – Login</title>
-  <meta name="description" content="Sign in to SupplyChain-Direct, the direct link between wholesalers and shop owners."/>
-  <link rel="manifest" href="/static/manifest.json"/>
-  <meta name="theme-color" content="#0f172a"/>
-  <link rel="icon" href="/static/images/icon-192.png"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/static/css/variables.css"/>
-  <link rel="stylesheet" href="/static/css/main.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DistribDZ Online – Login</title>
+  <meta name="description"
+    content="Sign in to DistribDZ Online, the direct link between wholesalers and shop owners." />
+  <link rel="manifest" href="/static/manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" href="/static/images/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/variables.css" />
+  <link rel="stylesheet" href="/static/css/main.css" />
 </head>
+
 <body class="auth-page">
 
   <!-- Animated background -->
@@ -24,18 +28,18 @@
     <header class="auth-brand">
       <div class="brand-icon">
         <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="12" fill="url(#brandGrad)"/>
-          <path d="M10 28L20 12L30 28H10Z" fill="white" opacity="0.9"/>
-          <circle cx="20" cy="20" r="4" fill="white"/>
+          <rect width="40" height="40" rx="12" fill="url(#brandGrad)" />
+          <path d="M10 28L20 12L30 28H10Z" fill="white" opacity="0.9" />
+          <circle cx="20" cy="20" r="4" fill="white" />
           <defs>
             <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#6366f1"/>
-              <stop offset="1" stop-color="#8b5cf6"/>
+              <stop stop-color="#6366f1" />
+              <stop offset="1" stop-color="#8b5cf6" />
             </linearGradient>
           </defs>
         </svg>
       </div>
-      <h1 class="brand-name">SupplyChain<span>Direct</span></h1>
+      <h1 class="brand-name">DistribDZ<span> Online</span></h1>
       <p class="brand-tagline">Connecting wholesalers &amp; retailers seamlessly</p>
     </header>
 
@@ -52,14 +56,16 @@
           <label for="login-email">Email Address</label>
           <div class="input-wrapper">
             <span class="input-icon">✉</span>
-            <input type="email" id="login-email" name="email" placeholder="you@example.com" required autocomplete="email"/>
+            <input type="email" id="login-email" name="email" placeholder="you@example.com" required
+              autocomplete="email" />
           </div>
         </div>
         <div class="form-group">
           <label for="login-password">Password</label>
           <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password"/>
+            <input type="password" id="login-password" name="password" placeholder="••••••••" required
+              autocomplete="current-password" />
             <button type="button" class="toggle-pw" onclick="togglePw('login-password', this)">👁</button>
           </div>
         </div>
@@ -89,14 +95,14 @@
             <label for="reg-name">Full Name</label>
             <div class="input-wrapper">
               <span class="input-icon">👤</span>
-              <input type="text" id="reg-name" name="name" placeholder="Your full name" required/>
+              <input type="text" id="reg-name" name="name" placeholder="Your full name" required />
             </div>
           </div>
           <div class="form-group">
             <label for="reg-phone">Phone</label>
             <div class="input-wrapper">
               <span class="input-icon">📱</span>
-              <input type="tel" id="reg-phone" name="phone" placeholder="+213 600 000 000"/>
+              <input type="tel" id="reg-phone" name="phone" placeholder="+213 600 000 000" />
             </div>
           </div>
         </div>
@@ -104,14 +110,14 @@
           <label for="reg-email">Email Address</label>
           <div class="input-wrapper">
             <span class="input-icon">✉</span>
-            <input type="email" id="reg-email" name="email" placeholder="you@example.com" required/>
+            <input type="email" id="reg-email" name="email" placeholder="you@example.com" required />
           </div>
         </div>
         <div class="form-group">
           <label for="reg-password">Password</label>
           <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input type="password" id="reg-password" name="password" placeholder="Min. 6 characters" required/>
+            <input type="password" id="reg-password" name="password" placeholder="Min. 6 characters" required />
             <button type="button" class="toggle-pw" onclick="togglePw('reg-password', this)">👁</button>
           </div>
         </div>
@@ -119,12 +125,12 @@
           <label>Account Type</label>
           <div class="role-selector">
             <label class="role-card" id="role-shop">
-              <input type="radio" name="role" value="shop_owner" checked/>
+              <input type="radio" name="role" value="shop_owner" checked />
               <span class="role-icon">🏪</span>
               <span class="role-label">Shop Owner</span>
             </label>
             <label class="role-card" id="role-driver">
-              <input type="radio" name="role" value="driver"/>
+              <input type="radio" name="role" value="driver" />
               <span class="role-icon">🚛</span>
               <span class="role-label">Driver</span>
             </label>
@@ -142,4 +148,5 @@
 
   <script src="/static/js/auth.js"></script>
 </body>
+
 </html>

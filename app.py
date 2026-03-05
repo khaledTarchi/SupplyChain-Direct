@@ -1,5 +1,5 @@
 """
-app.py – SupplyChain-Direct Main Server
+app.py – DistribDZ Online Main Server
 ----------------------------------------
 Flask application factory with:
   - Session-based authentication (Flask-Login)
@@ -71,6 +71,7 @@ def create_app() -> Flask:
 # Seed initial data
 # ---------------------------------------------------------------------------
 def _seed_if_empty():
+    return  # auto-seeding disabled – accounts are managed manually
     if User.query.first():
         return  # already seeded
 
@@ -130,7 +131,7 @@ app = create_app()
 
 if __name__ == "__main__":
     app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 5000)),
-        debug=False
+      
+        port=5000,
+        debug=True
     )
